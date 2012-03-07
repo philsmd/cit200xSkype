@@ -23,7 +23,7 @@ Software:
 
 # Hacking
 
-* Simplify code (write function for, message generation instead of using hard-coded message length,headers etc, that's easy,but needed?YES)
+* Simplify code (write function for message generation instead of using hard-coded message length,headers etc, that's easy,but needed?YES)
 * VoiceMail implementation (sorry I don't use that service,please DONATE if you really want it,see pschmidt.it)
 * Intensive testing
 * GUI (if you really want/need it,why not?)
