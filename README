@@ -1,0 +1,42 @@
+# About
+
+This project aims to help linux users to (re-)use their CIT200 (Linksys (C)) VoIP phone on other platforms than Windows (e.g. LINUX!!!)
+
+# Features  
+* should have all functionalities that the Cit200.exe of Linksys had (except VoiceMail at the moment)
+
+# Requirements
+
+Software:  
+- Python (version?,please test and give confirmation)
+
+# Installation and First Steps
+
+* Clone this repository:  
+    git clone https://github.com/philsmd/cit200xSkype.git  
+* Install dpendencies:  
+    cd cit200xSkype
+    sudo pip install skype4py
+    sudo pip install pyusb
+* Run it:  
+    sudo python cit200xSkype.py 
+
+# Hacking
+
+* Simplify code (write function for, message generation instead of using hard-coded message length,headers etc, that's easy,but needed?YES)
+* VoiceMail implementation (sorry I don't use that service,please DONATE if you really want it,see pschmidt.it)
+* Intensive testing
+* GUI (if you really want/need it,why not?)
+* and,and,and
+
+# Credits and Contributors 
+Credits go to:  
+  
+* Skype4Py team
+* mike6d696b65 @ launchpad for his inputs w/ this project https://code.launchpad.net/~mike6d696b65/cit200/Cit200 (http://bazaar.launchpad.net/~mike6d696b65/cit200/Cit200/files)
+
+Did I miss somebody? Please help me to complete the list if you think I missed somebody here!
+
+# License
+
+This project is lincensed under the **GNU GENERAL PUBLIC LICENSE version 3**.  
