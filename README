@@ -9,6 +9,11 @@ This project aims to help linux users to (re-)use their CIT200 (Linksys (C)) VoI
 
 Software:  
 - Python (version?,please test and give confirmation)
+- Python library Skype4Py
+- Python library pyusb
+
+Hardware:  
+- Linksys (C) CIT200 Phone including Base connected via USB
 
 # Installation and First Steps
 

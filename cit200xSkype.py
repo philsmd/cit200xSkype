@@ -20,6 +20,18 @@
 # 2012-03-07: initial release (GitHub)
 # Credits: to 
 
+
+# HACKING,HACKING,TODO
+# Create a function that generates the set of messages for us (w/o using predefined length and other headers)
+# this makes it more flexible, reduce/refactor code and the communication could be faster (e.g for small skype-names we
+# do not need 5 messages, instead for longer names we could need that)
+# What I found out as of now:
+# c5 .. .. ..  means that there are 5 messages following this message
+# c3 .. .. ..  (only 3)
+# The third last byte of the first messages 7-byte block is the total length (of bytes) following this message
+# ... please help to understand the full meaning of all headers etc. to create a helper function that does the message
+# generation for us (w/o hard-coding it)
+
 import usb.core
 import time
 import Skype4Py
