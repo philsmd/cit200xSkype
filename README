@@ -19,11 +19,11 @@ Hardware:
 
 * Clone this repository:  
     git clone https://github.com/philsmd/cit200xSkype.git  
-* Install dpendencies:  
-    cd cit200xSkype
+* Install dependencies:  
     sudo pip install skype4py
     sudo pip install pyusb
 * Run it:  
+    cd cit200xSkype
     sudo python cit200xSkype.py 
 
 # Hacking
