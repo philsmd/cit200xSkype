@@ -361,7 +361,7 @@ def holdcall():
                 print "[i] Call was resumed"
                 c.Resume()
             except:
-                print "[!] Failed to put resume call"
+                print "[!] Failed to resume call"
             break
 
 def placecall(callee):
