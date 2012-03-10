@@ -631,10 +631,12 @@ def multi_sort_friend(items,columns):
             cmp2=getattr(right,fn)
             # put OFFLINE states at the very END of the list
             if fn=="OnlineStatus":
+                cmp1=skypeStates.index(cmp1)
+                cmp2=skypeStates.index(cmp2)
                 if cmp1==skypeStates.index("OFFLINE"):
-                    cmp1==10
+                    cmp1=10
                 if cmp2==skypeStates.index("OFFLINE"):
-                    cmp2==10
+                    cmp2=10
             # if FullName is NOT present use its Handle!
             if fn=="FullName":
                 if cmp1==None or len(cmp1)<1:
@@ -653,7 +655,7 @@ def multi_sort_friend(items,columns):
 
 def get_contact(arg):
     global contact
-    friends=multi_sort_friend(skype.Friends,['-OnlineStatus','FullName'])
+    friends=multi_sort_friend(skype.Friends,['OnlineStatus','FullName'])
     contact=[len(friends)]
     if friends is not None and len(friends)>arg:
         contact.append(arg) # the index
