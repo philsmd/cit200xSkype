@@ -644,10 +644,6 @@ def multi_sort_friend(items,columns):
             if (type(cmp1)==str or type(cmp1)==unicode) and (type(cmp2)==str or type(cmp2)==unicode):
                 cmp1=cmp1.lower()
                 cmp2=cmp2.lower()
-            try:
-                print "compare %s vs %s %s"%(str(cmp1),str(cmp2),type(cmp1))
-            except:
-                print "errror"
             result=cmp(cmp1,cmp2)
             if result:
                 return order*result
