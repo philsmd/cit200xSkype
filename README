@@ -38,8 +38,8 @@ Hardware:
       
     Note2: if sudo python cit200xSkype.py exits very quickly after starting  
     it, you may need to apply the following patch to skype4py:
-    *** /usr/local/lib/python2.7/dist-packages/Skype4Py/api/posix_dbus.py.orig      2014-03-10 13:36:11.186580377 +0100  
-    --- /usr/local/lib/python2.7/dist-packages/Skype4Py/api/posix_dbus.py   2014-03-10 13:36:19.902580088 +0100  
+    *** /usr/local/lib/python2.7/dist-packages/Skype4Py/api/posix_dbus.py.orig  
+    --- /usr/local/lib/python2.7/dist-packages/Skype4Py/api/posix_dbus.py  
     *************** class SkypeAPI(SkypeAPIBase):    
     *** 87,88 ****  
     --- 87,98 ----  
