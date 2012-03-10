@@ -36,7 +36,7 @@ import usb.core
 import time
 import Skype4Py
 import sys
-import os
+from os import environ
 
 PHONE_NAME="Cit200"
 ID_VENDOR=0x13b1  #ID_VENDOR=0xb113
@@ -169,7 +169,7 @@ def main():
                         # if DEBUG:
                         #     print "[i] Confirm status change";
                         dev_write(dev,[0x83,0x32,0x01,0x43,0x00,0x00,0x00])
-                        dev_write(dev,[0xc1,0x33,0x01,0x43,get_status(),0x9A,0x43])
+                        dev_write(dev,[0xc1,0x33,0x01,0x43,get_status(),0x9a,0x43])
                         dev_write(dev,[0x01,0x03,0x00,0x00,0x00,0x00,0x00])
                         qwerty=0;
                     elif qwerty==4:
@@ -196,7 +196,7 @@ def main():
                             try:
                                 birthday=[int(birthdayStr[0:2],16),int(birthdayStr[2:4],16),int(birthdayStr[5:7],16),int(birthdayStr[8:10],16)]
                             except:
-                                print "[!] Failed to get the birtday. SKIP"
+                                print "[!] Failed to get the birthday. SKIP"
                         dev_write(dev,[0x41,ord(clang[7]),ord(clang[8]),ord(clang[9]),birthday[0],birthday[1],birthday[2]])
                         dev_write(dev,[0x03,birthday[3],get_gender(contact[7]),0x05,0x00,0x00,0x00])
                         qwerty=0;
@@ -260,13 +260,13 @@ def main():
                     elif qwerty==15:
                         #print "[i] View Voicemail"
                         dev_write(dev,[0x83,0x32,0x01,0x43,0x00,0x00,0x00])
-                        dev_write(dev,[0xC1,0x33,0x01,0x43,0x06,0x9A,0x48])
+                        dev_write(dev,[0xc1,0x33,0x01,0x43,0x06,0x9a,0x48])
                         dev_write(dev,[0x04,0x00,0x00,0x00,len(skype.Voicemails),0x00,0x00]) # TODO
                         qwerty=0
                     elif qwerty==16:
                         #print "[i] Delete Voicemail"
                         dev_write(dev,[0x83,0x32,0x01,0x43,0x00,0x00,0x00])
-                        dev_write(dev,[0xC2,0x33,0x01,0x43,0x0A,0x9A,0x49]) # confirm deletion
+                        dev_write(dev,[0xc2,0x33,0x01,0x43,0x0a,0x9a,0x49]) # confirm deletion
                         dev_write(dev,[0x41,0x00,0x00,0x00,0x00,0x00,0x00])
                         dev_write(dev,[0x02,0x08,0x00,0x00,0x00,0x00,0x00])
                         qwerty=0
@@ -339,8 +339,8 @@ def main():
             time.sleep(0.2)
     except KeyboardInterrupt:
         # tell the phone that we are going to stop the communication (and this application)
-        dev_write(dev,[0xc1,0x33,0x00,0x43,0x07,0x9A,0x4f]) # DISCONNECT?
-        dev_write(dev,[0x05,0x0A,0x01,0x00,0x00,0x00,0x00])
+        dev_write(dev,[0xc1,0x33,0x00,0x43,0x07,0x9a,0x4f]) # DISCONNECT?
+        dev_write(dev,[0x05,0x0a,0x01,0x00,0x00,0x00,0x00])
         time.sleep(1)
         usb.util.release_interface(dev,USB_IF)
         dev.attach_kernel_driver(USB_IF)
@@ -384,7 +384,7 @@ def get_users_localtime(offset):
     # return list with [hours] and [minutes]
     # of course we could do some calculation w/ datetime, but do we need that,
     # its funnier to do it without
-    ret=[0xAA,0xAA]
+    ret=[0xaa,0xaa]
     if offset is not None:
         localtime=time.localtime(time.time())
         hours=localtime[3]
@@ -442,7 +442,7 @@ def format_phone_tel(target,length):
             ret.append(int(converted[i:i+2],16))
             i+=2
         elif converted[i].isnumeric() and i+1>=totalLength:
-            ret.append(int(converted[i:i+1],16)*16+0x0A)   #  take only first one,shift it to 16^1 and add an A afterwards  => xA
+            ret.append(int(converted[i:i+1],16)*16+0x0a)   #  take only first one,shift it to 16^1 and add an A afterwards  => xA
             i+=2
         elif converted[i].isnumeric() and i+1<totalLength:
             j=2
@@ -454,16 +454,16 @@ def format_phone_tel(target,length):
                     break
                 j+=1
             if found is False:
-                ret.append(0xAA)
+                ret.append(0xaa)
                 i+=2
-        elif not converted[i].isnumeric() and converted[i]!='A':
+        elif not converted[i].isnumeric() and converted[i]!='A' and converted[i]!='a':
             # skip one position (and continue)
             i+=1
         else:
-            ret.append(0xAA)
+            ret.append(0xaa)
             i+=2
     while len(ret)<=length:
-        ret.append(0xAA)
+        ret.append(0xaa)
     return ret 
 
 def get_gender(genderStr):
@@ -623,10 +623,41 @@ def set_status(s):
         print "[i] %s Phone changed status from %s into %s"%(PHONE_NAME,skype.CurrentUserStatus,skypeStates[s])
         skype.CurrentUserStatus=skypeStates[s]
 
+def multi_sort_friend(items,columns):
+    comparers=[((col[1:].strip(),-1) if col.startswith('-') else (col.strip(),1)) for col in columns]
+    def comparer(left,right):
+        for fn,order in comparers:
+            cmp1=getattr(left,fn)
+            cmp2=getattr(right,fn)
+            # put OFFLINE states at the very END of the list
+            if fn=="OnlineStatus":
+                if cmp1==skypeStates.index("OFFLINE"):
+                    cmp1==10
+                if cmp2==skypeStates.index("OFFLINE"):
+                    cmp2==10
+            # if FullName is NOT present use its Handle!
+            if fn=="FullName":
+                if cmp1==None or len(cmp1)<1:
+                    cmp1=getattr(left,"Handle")
+                if cmp2==None or len(cmp2)<1:
+                    cmp2=getattr(right,"Handle")
+            if (type(cmp1)==str or type(cmp1)==unicode) and (type(cmp2)==str or type(cmp2)==unicode):
+                cmp1=cmp1.lower()
+                cmp2=cmp2.lower()
+            try:
+                print "compare %s vs %s %s"%(str(cmp1),str(cmp2),type(cmp1))
+            except:
+                print "errror"
+            result=cmp(cmp1,cmp2)
+            if result:
+                return order*result
+        else:
+            return 0
+    return sorted(items,cmp=comparer)
+
 def get_contact(arg):
     global contact
-    tmp=tuple(sorted(skype.Friends,key=lambda friend:friend.FullName))
-    friends=tuple(sorted(tmp,key=lambda friend:friend.OnlineStatus,reverse=True))
+    friends=multi_sort_friend(skype.Friends,['-OnlineStatus','FullName'])
     contact=[len(friends)]
     if friends is not None and len(friends)>arg:
         contact.append(arg) # the index
