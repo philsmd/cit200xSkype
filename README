@@ -21,10 +21,14 @@ Hardware:
     git clone https://github.com/philsmd/cit200xSkype.git  
 * Install dependencies:  
     sudo pip install skype4py
-    sudo pip install pyusb
+    sudo pip install pyusb  
+    Note: in some cases it might be better to use the package manager of your system to install those libraries
 * Run it:  
     cd cit200xSkype
-    sudo python cit200xSkype.py 
+    sudo python cit200xSkype.py  
+    Note: if you get a ValueError: execv() arg 2 must not be empty you should indeed try the skype4py version of your distribution OR
+    if you are experienced enough and want to patch files yourself replace the os.execlp('skype') with os.execlp('skype','--') calls in
+    [python folder (e.g /usr/local/lib/python2.7)]/dist-packages/Skype4Py/api/posix_x11.py and ../posix_dbus.py
 
 # Hacking
 
