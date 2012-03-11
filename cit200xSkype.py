@@ -177,7 +177,7 @@ def main():
                             print "[i] Answer contact details"
                         # numTotalContacts,  index,chandle,cname,cstat,language,birthday,gender,home,cell,office,address,timezone, indexb,chandleb,cnameb,statb,...
                         dev_write(dev,[0x83,0x32,0x01,0x43,0x00,0x00,0x00])
-                        dev_write(dev,[0xc9,0x33,0x01,0x43,0x34,0x9a,0x4d])
+                        dev_write(dev,[0xc9,0x33,0x01,0x43,0x35,0x9a,0x4d])
                         chandle=format_phone_output(contact[2],26)
                         # chandle=format_phone_output(contact[2]+" "+contact[3],26)      # would be nicer but NOT good/possible for initiating CALL
                         # (Skype-handle extraction in this python script==good work around?)
@@ -198,7 +198,11 @@ def main():
                             except:
                                 print "[!] Failed to get the birthday. SKIP"
                         dev_write(dev,[0x41,ord(clang[7]),ord(clang[8]),ord(clang[9]),birthday[0],birthday[1],birthday[2]])
-                        dev_write(dev,[0x03,birthday[3],get_gender(contact[7]),0x05,0x00,0x00,0x00])
+                        try:
+                            cstat=skypeStates.index(contact[ptr+3])
+                        except:
+                            cstat=0x00
+                        dev_write(dev,[0x03,birthday[3],get_gender(contact[7]),cstat,0x00,0x00,0x00])
                         qwerty=0;
                     elif qwerty==7:
                         if DEBUG:
