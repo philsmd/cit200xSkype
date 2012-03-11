@@ -101,11 +101,11 @@ def main():
                 dev_read(dev);
                 if c==1:
                     localtime=time.localtime(time.time())
-                    dev_write(dev,[0xc1,0x33,0x00,0x43,0x07,0x9a,0x4f,0x68,localtime[3],localtime[4],0x06,stat,0x02,0x00])
+                    dev_write(dev,[0xc1,0x33,0x00,0x43,0x07,0x9a,0x4f])
+                    dev_write(dev,[0x05,localtime[3],localtime[4],0x06,stat,0x02,0x00]) # what about 0x06 and 0x02?
                 i=1
                 while i<5:
                     i+=1
-
                     # START OF SWITCH
                     if qwerty==1:
                         # init (first time in loop)
@@ -140,8 +140,8 @@ def main():
                                 dev_write(dev,[0x03,ord(chandle[12]),ord(chandle[13]),cstat,0x00,0x00,0x00])
                                 ptr+=contactItems
                         else:
-                            dev_write(dev,[0xc5,0x33,0x01,0x43,0x23,0x9a,0x4c])
-                            dev_write(dev,[0x45,0x00,0x00,0x00,0x00,0x00,0x00])
+                            dev_write(dev,[0xc1,0x33,0x01,0x43,0x06,0x9a,0x4c])
+                            dev_write(dev,[0x04,0x00,0x00,0x00,0x00,0x00,0x00])
                         qwerty=0
                     elif qwerty==3:
                         if DEBUG:
@@ -177,7 +177,7 @@ def main():
                             print "[i] Answer contact details"
                         # numTotalContacts,  index,chandle,cname,cstat,language,birthday,gender,home,cell,office,address,timezone, indexb,chandleb,cnameb,statb,...
                         dev_write(dev,[0x83,0x32,0x01,0x43,0x00,0x00,0x00])
-                        dev_write(dev,[0xc9,0x33,0x01,0x43,0x34,0x9a,0x4d]) # 0x34 length
+                        dev_write(dev,[0xc9,0x33,0x01,0x43,0x34,0x9a,0x4d])
                         chandle=format_phone_output(contact[2],26)
                         # chandle=format_phone_output(contact[2]+" "+contact[3],26)      # would be nicer but NOT good/possible for initiating CALL
                         # (Skype-handle extraction in this python script==good work around?)
@@ -206,17 +206,18 @@ def main():
                         # numTotalContacts,  index,chandle,cname,cstat,language,birthday,gender,home,cell,office,address,timezone, indexb,chandleb,cnameb,statb,...
                         dev_write(dev,[0x83,0x32,0x01,0x43,0x00,0x00,0x00])
                         if len(contact)>1:
-                            dev_write(dev,[0xc6,0x33,0x01,0x43,0x22,0x9a,0x4c])
+                            dev_write(dev,[0xc6,0x33,0x01,0x43,0x25,0x9a,0x4c])
                             cname=format_phone_output(contact[3],13)
-                            dev_write(dev,[0x45,0x00,0x02,0x00,0x21,ord(cname[0]),ord(cname[1])])   # 02=>00? and 0x00(2)=>0x01    0x21 AMOUNT? AA nothing?
+                            dev_write(dev,[0x45,0x00,0x02,0x00,0x21,ord(cname[0]),ord(cname[1])]) # 0x21 AMOUNT of contacts? =>AA nothing (in else)?
                             dev_write(dev,[0x44,ord(cname[2]),ord(cname[3]),ord(cname[4]),ord(cname[5]),ord(cname[6]),ord(cname[7])])
                             dev_write(dev,[0x43,ord(cname[8]),ord(cname[9]),ord(cname[10]),ord(cname[11]),ord(cname[12]),ord(cname[13])])
-                            chandle=format_phone_output(contact[2],17)
+                            chandle=format_phone_output(contact[2],16)
                             dev_write(dev,[0x42,ord(chandle[0]),ord(chandle[1]),ord(chandle[2]),ord(chandle[3]),ord(chandle[4]),ord(chandle[5])])
                             dev_write(dev,[0x41,ord(chandle[6]),ord(chandle[7]),ord(chandle[8]),ord(chandle[9]),ord(chandle[10]),ord(chandle[11])])
-                            dev_write(dev,[0x02,ord(chandle[12]),ord(chandle[13]),ord(chandle[14]),ord(chandle[15]),ord(chandle[16]),ord(chandle[17])])
+                            dev_write(dev,[0x05,ord(chandle[12]),ord(chandle[13]),ord(chandle[14]),ord(chandle[15]),ord(chandle[16]),0x00])
                         else:
-                            dev_write(dev,[0xc6,0x33,0x01,0x43,0x00,0x9a,0x4c])
+                            dev_write(dev,[0xc1,0x33,0x01,0x43,0x06,0x9a,0x4c])
+                            dev_write(dev,[0x04,0x00,0x00,0x00,0x00,0x00,0x00])
                         qwerty=0
                     elif qwerty==13:
                         # numTotalContacts,  index,chandle,cname,cstat,language,birthday,gender,home,cell,office,address,timezone, indexb,chandleb,cnameb,statb,...
@@ -224,7 +225,7 @@ def main():
                             print "[i] Answer contact detail office, home, cell phone"
                         dev_write(dev,[0x83,0x32,0x01,0x43,0x00,0x00,0x00])
                         if len(contact)>1:
-                            dev_write(dev,[0xc6,0x33,0x01,0x43,0x22,0x9a,0x4d])
+                            dev_write(dev,[0xc6,0x33,0x01,0x43,0x23,0x9a,0x4d])
                             tel_office=format_phone_tel(contact[10],9)
                             dev_write(dev,[0x45,0x00,0x01,0x01,tel_office[0],tel_office[1],tel_office[2]])
                             dev_write(dev,[0x44,tel_office[3],tel_office[4],tel_office[5],tel_office[6],tel_office[7],tel_office[8]])
@@ -235,7 +236,8 @@ def main():
                             dev_write(dev,[0x41,tel_mobile[1],tel_mobile[2],tel_mobile[3],tel_mobile[4],tel_mobile[5],tel_mobile[6]])
                             dev_write(dev,[0x03,tel_mobile[7],tel_mobile[8],tel_mobile[9],0x00,0x00,0x00])
                         else:
-                            dev_write(dev,[0xc6,0x33,0x01,0x43,0x00,0x9a,0x4d]) # length 0!?
+                            dev_write(dev,[0xc6,0x33,0x01,0x43,0x05,0x9a,0x4d])
+                            dev_write(dev,[0x03,0x00,0x00,0x00,0x00,0x00,0x00])
                         qwerty=0
                     elif qwerty==14:
                         if DEBUG:
@@ -255,7 +257,8 @@ def main():
                             users_time=get_users_localtime(contact[12])
                             dev_write(dev,[0x03,0x00,users_time[0],users_time[1],0x00,0x00,0x00])
                         else:
-                            dev_write(dev,[0xc8,0x33,0x01,0x43,0x00,0x9a,0x4d]) 
+                            dev_write(dev,[0xc1,0x33,0x01,0x43,0x05,0x9a,0x4d]) 
+                            dev_write(dev,[0x03,0x00,0x00,0x00,0x00,0x00,0x00]) 
                         qwerty=0
                     elif qwerty==15:
                         #print "[i] View Voicemail"
@@ -383,7 +386,7 @@ def endcall():
 def get_users_localtime(offset):
     # return list with [hours] and [minutes]
     # of course we could do some calculation w/ datetime, but do we need that,
-    # its funnier to do it without
+    # it's funnier to do it without
     ret=[0xaa,0xaa]
     if offset is not None:
         localtime=time.localtime(time.time())
