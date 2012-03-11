@@ -199,7 +199,7 @@ def main():
                                 print "[!] Failed to get the birthday. SKIP"
                         dev_write(dev,[0x41,ord(clang[7]),ord(clang[8]),ord(clang[9]),birthday[0],birthday[1],birthday[2]])
                         try:
-                            cstat=skypeStates.index(contact[ptr+3])
+                            cstat=skypeStates.index(contact[4])
                         except:
                             cstat=0x00
                         dev_write(dev,[0x03,birthday[3],get_gender(contact[7]),cstat,0x00,0x00,0x00])
