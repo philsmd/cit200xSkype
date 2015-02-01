@@ -45,16 +45,16 @@ Hardware:
     *** 87,88 ****  
     --- 87,98 ----  
           def run(self):  
-    ++         # Bug fix 'segmentation fault core dumped' when using dbus.  
-    ++         self.logger.info('thread started')  
-    ++         if self.run_main_loop:  
-    ++             context = self.mainloop.get_context()  
-    ++             while True:  
-    ++                 context.iteration(False)  
-    ++                 time.sleep(0.2)  
-    ++         self.logger.info('thread finished')  
-    ++   
-    ++     def runOld(self):  
+    \+         # Bug fix 'segmentation fault core dumped' when using dbus.  
+    \+         self.logger.info('thread started')  
+    \+         if self.run_main_loop:  
+    \+             context = self.mainloop.get_context()  
+    \+             while True:  
+    \+                 context.iteration(False)  
+    \+                 time.sleep(0.2)  
+    \+         self.logger.info('thread finished')  
+    \+   
+    \+     def runOld(self):  
               self.logger.info('thread started')  
 
 # Hacking
