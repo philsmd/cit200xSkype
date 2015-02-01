@@ -37,23 +37,24 @@ Hardware:
     api/posix_x11.py and ../posix_dbus.py  
       
     Note2: if sudo python cit200xSkype.py exits very quickly after starting  
-    it, you may need to apply the following patch to skype4py:
+    it, you may need to apply the following patch to skype4py:  
+  
     *** /usr/local/lib/python2.7/dist-packages/Skype4Py/api/posix_dbus.py.orig  
     --- /usr/local/lib/python2.7/dist-packages/Skype4Py/api/posix_dbus.py  
     *************** class SkypeAPI(SkypeAPIBase):    
     *** 87,88 ****  
     --- 87,98 ----  
           def run(self):  
-    +         # Bug fix 'segmentation fault core dumped' when using dbus.  
-    +         self.logger.info('thread started')  
-    +         if self.run_main_loop:  
-    +             context = self.mainloop.get_context()  
-    +             while True:  
-    +                 context.iteration(False)  
-    +                 time.sleep(0.2)  
-    +         self.logger.info('thread finished')  
-    +   
-    +     def runOld(self):  
+    ++         # Bug fix 'segmentation fault core dumped' when using dbus.  
+    ++         self.logger.info('thread started')  
+    ++         if self.run_main_loop:  
+    ++             context = self.mainloop.get_context()  
+    ++             while True:  
+    ++                 context.iteration(False)  
+    ++                 time.sleep(0.2)  
+    ++         self.logger.info('thread finished')  
+    ++   
+    ++     def runOld(self):  
               self.logger.info('thread started')  
 
 # Hacking
